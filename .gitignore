@@ -1,0 +1,4 @@
+cpp/*.o
+cpp/out/
+python/__pycache__/
+python/out/
