@@ -1,14 +1,15 @@
 SYSCONF_LINK = g++
 CPPFLAGS     =
 LDFLAGS      =
-LIBS         = -lm
+LIBS         = -lSDL2 -lSDL2_image
+#LIBS         = -lm
 
 DESTDIR = ./
 TARGET  = main
 
 OBJECTS := $(patsubst %.cpp,%.o,$(wildcard *.cpp))
 
-all: $(DESTDIR)$(TARGET)
+all: clean $(DESTDIR)$(TARGET)
 
 $(DESTDIR)$(TARGET): $(OBJECTS)
 	$(SYSCONF_LINK) -Wall $(LDFLAGS) -o $(DESTDIR)$(TARGET) $(OBJECTS) $(LIBS)
@@ -19,4 +20,4 @@ $(OBJECTS): %.o: %.cpp
 clean:
 	-rm -f $(OBJECTS)
 	-rm -f $(TARGET)
-	-rm -f *.tga
+#	-rm -f *.tga

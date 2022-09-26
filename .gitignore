@@ -1,4 +1,11 @@
-cpp/*.o
-cpp/out/
-python/__pycache__/
-python/out/
+cpp/*
+!cpp/*.h
+!cpp/*.cpp
+!cpp/Makefile
+
+python/*
+!python/*.py
+
+#sdl2_demo
+sdl2_demo/*
+!sdl2_demo/*.*

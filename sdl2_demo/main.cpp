@@ -2,11 +2,10 @@
 // Using SDL2 to create an application window
 
 // To compile with gcc:  (tested on Ubuntu 14.04 64bit):
-// if using openGL:
+// If using openGL:
 //	 g++ sdl2_opengl.cpp -lSDL2 -lGL
-// if using SDL and SDL_image:
-//	 g++ render.cpp -o prog -lSDL2 -lSDL2_image
-
+// if using SDL only:
+//   g++ main.cpp -o prog -lSDL2 -lSDL2_image
 // To compile with msvc: (tested on Windows 7 64bit)
 //   cl sdl2_opengl.cpp /I C:\sdl2path\include /link C:\path\SDL2.lib C:\path\SDL2main.lib /SUBSYSTEM:CONSOLE /NODEFAULTLIB:libcmtd.lib opengl32.lib
 
@@ -17,21 +16,6 @@
 #include <stdio.h>
 #include <cstdint>
 #include <iostream>
-#include "geometry.h"
-#include "vec.h"
-
-
-#define BACKGROUND 0x00
-
-void write2texture(SDL_Texture *texture, unsigned int *pixels, int pitch){
-	int w, h;
-	SDL_QueryTexture(texture, NULL, NULL, &w, &h);
-
-	//for (int i=w*h/2;i<w*h/2+w*2;i++){
-	//	pixels[i] =0xFF000000;
-	//}
-	SDL_UpdateTexture(texture, NULL, pixels, pitch);
-}
 
 int main(int argc, char* argv[]) {
 
@@ -74,25 +58,17 @@ int main(int argc, char* argv[]) {
     texture = SDL_CreateTexture( renderer, SDL_PIXELFORMAT_RGBA8888,
             SDL_TEXTUREACCESS_STREAMING, win_width, win_height);
 
-    // Draw pixels
+    //Pixel drawing goes here.
     unsigned int pixels[win_width*win_height];
     int pitch = win_width*sizeof(int);
-	for (int i=0; i<(win_width*win_height); i++){
-			pixels[i] = BACKGROUND;
-		}
 
-	Line l1 = Line(Vec2(10,200),Vec2(400,500));
-	l1.draw(pixels,win_width);
-
-	write2texture(texture, pixels, pitch);
-
-    //for (int i=0; i<(win_width*win_height); i++){
-    //    pixels[i] = 0x00;
-    //}
-    //for (int i=win_width*win_height/2;i<win_width*win_height/2+win_width*2;i++){
-    //    pixels[i] =0xFF000000;
-    //}
-    //SDL_UpdateTexture(texture, NULL, pixels, pitch);
+    for (int i=0; i<(win_width*win_height); i++){
+        pixels[i] = 0x00;
+    }
+    for (int i=win_width*win_height/2;i<win_width*win_height/2+win_width*2;i++){
+        pixels[i] =0xFF000000;
+    }
+    SDL_UpdateTexture(texture, NULL, pixels, pitch);
 
 	//SDL_Rect texture_rect;
 	//texture_rect.x=0;
@@ -145,7 +121,6 @@ int main(int argc, char* argv[]) {
 					break;
 			}
 		}
-
 		SDL_SetRenderDrawColor(renderer,0x00,0x00,0x00,SDL_ALPHA_OPAQUE);
 		SDL_RenderClear(renderer);
 		//SDL_SetRenderDrawColor(renderer, 0x00,0x00,0x00, SDL_ALPHA_OPAQUE);
@@ -153,7 +128,6 @@ int main(int argc, char* argv[]) {
 		SDL_RenderCopy(renderer, texture, NULL, NULL);
 		SDL_RenderPresent(renderer);
 	}
-
 
     //SDL_Delay(3000);  // Pause execution for 3000 milliseconds, for example
 
