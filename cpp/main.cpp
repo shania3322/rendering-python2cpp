@@ -19,29 +19,35 @@
 #include <iostream>
 #include "geometry.h"
 #include "vec.h"
-
+#include "sdltexture.h"
 
 #define BACKGROUND 0x00
+#define RED 0xFF000000
 
-void write2texture(SDL_Texture *texture, unsigned int *pixels, int pitch){
-	int w, h;
-	SDL_QueryTexture(texture, NULL, NULL, &w, &h);
-
-	//for (int i=w*h/2;i<w*h/2+w*2;i++){
-	//	pixels[i] =0xFF000000;
-	//}
-	SDL_UpdateTexture(texture, NULL, pixels, pitch);
-}
+//void write2texture(SDL_Texture *texture, unsigned int *pixels, int pitch){
+//	int w, h;
+//	SDL_QueryTexture(texture, NULL, NULL, &w, &h);
+//
+//	//for (int i=w*h/2;i<w*h/2+w*2;i++){
+//	//	pixels[i] =0xFF000000;
+//	//}
+//	SDL_UpdateTexture(texture, NULL, pixels, pitch);
+//}
 
 int main(int argc, char* argv[]) {
 
     SDL_Window *window;
 	SDL_Renderer *renderer;
-	SDL_Texture *texture;
+	//SDL_Texture *texture;
 	uint32_t windowflags=SDL_WINDOW_SHOWN|SDL_WINDOW_RESIZABLE;
-	int win_height=480;
-	int win_width=640;
+	int win_height=600;
+	int win_width=800;
 	int running=1;
+
+	//SDL_RendererFlip flags: SDL_FLIP_NONE, SDL_FLIP_HORIZONTAL,SDL_FLIP_VERTICAL
+	SDL_RendererFlip flip = static_cast<SDL_RendererFlip>(SDL_FLIP_NONE);
+	Texture tt(win_width, win_height);
+
 
 
     SDL_Init(SDL_INIT_VIDEO);              // Initialize SDL2
@@ -71,8 +77,9 @@ int main(int argc, char* argv[]) {
 	}
 
 	//texture = IMG_LoadTexture(renderer, "badger.png");
-    texture = SDL_CreateTexture( renderer, SDL_PIXELFORMAT_RGBA8888,
-            SDL_TEXTUREACCESS_STREAMING, win_width, win_height);
+    //texture = SDL_CreateTexture( renderer, SDL_PIXELFORMAT_RGBA8888,
+    //        SDL_TEXTUREACCESS_STREAMING, win_width, win_height);
+	tt.createTexture(renderer);
 
     // Draw pixels
     unsigned int pixels[win_width*win_height];
@@ -81,10 +88,13 @@ int main(int argc, char* argv[]) {
 			pixels[i] = BACKGROUND;
 		}
 
-	Line l1 = Line(Vec2(10,200),Vec2(400,500));
-	l1.draw(pixels,win_width);
+	Line(Vec2(10,200),Vec2(400,500),pixels,win_width);
+	Line(Vec2(400,500),Vec2(20,100),pixels,win_width);
+	Line(Vec2(20,100),Vec2(10,200),pixels,win_width);
+	Line(Vec2(100,500),Vec2(400,500),pixels,win_width);
 
-	write2texture(texture, pixels, pitch);
+	//write2texture(texture, pixels, pitch);
+	tt.render(renderer,pixels, pitch, flip, running);
 
     //for (int i=0; i<(win_width*win_height); i++){
     //    pixels[i] = 0x00;
@@ -101,59 +111,59 @@ int main(int argc, char* argv[]) {
 	//texture_rect.h=win_height;
 
 	// The window is open: could enter program loop here (see SDL_PollEvent())
-	while(running) {
-		SDL_Event event;
-		while(SDL_PollEvent(&event)) {
-			switch(event.type) {
-				//case SDL_WINDOWEVENT:
-				//	switch(event.window.event)
-				//	{
-				//		case SDL_WINDOWEVENT_RESIZED:
-				//			{
-				//				int ww;
-				//				int hh;
-				//				SDL_GetWindowSize(window, &ww, &hh);
-				//				texture_rect.w = ww;
-				//				texture_rect.h = hh;
-				//			}
-				//			break;
-				//	}
-				case SDL_KEYDOWN:
-					switch(event.key.keysym.sym)
-					{
-						case SDLK_a:
-							std::cout<<"left"<<std::endl;
-							break;
-						case SDLK_w:
-							std::cout<<"up"<<std::endl;
-							break;
-						case SDLK_d:
-							std::cout<<"right"<<std::endl;
-							break;
-						case SDLK_s:
-							std::cout<<"down"<<std::endl;
-							break;
-						case SDLK_q:
-							running=0;
-							break;
-						default:
-							break;
-					}
-					break;
-				case SDL_QUIT:
-					running=0;
-					break;
-			}
-		}
+	//while(running) {
+	//	SDL_Event event;
+	//	while(SDL_PollEvent(&event)) {
+	//		switch(event.type) {
+	//			//case SDL_WINDOWEVENT:
+	//			//	switch(event.window.event)
+	//			//	{
+	//			//		case SDL_WINDOWEVENT_RESIZED:
+	//			//			{
+	//			//				int ww;
+	//			//				int hh;
+	//			//				SDL_GetWindowSize(window, &ww, &hh);
+	//			//				texture_rect.w = ww;
+	//			//				texture_rect.h = hh;
+	//			//			}
+	//			//			break;
+	//			//	}
+	//			case SDL_KEYDOWN:
+	//				switch(event.key.keysym.sym)
+	//				{
+	//					case SDLK_a:
+	//						std::cout<<"left"<<std::endl;
+	//						break;
+	//					case SDLK_w:
+	//						std::cout<<"up"<<std::endl;
+	//						break;
+	//					case SDLK_d:
+	//						std::cout<<"right"<<std::endl;
+	//						break;
+	//					case SDLK_s:
+	//						std::cout<<"down"<<std::endl;
+	//						break;
+	//					case SDLK_q:
+	//						running=0;
+	//						break;
+	//					default:
+	//						break;
+	//				}
+	//				break;
+	//			case SDL_QUIT:
+	//				running=0;
+	//				break;
+	//		}
+	//	}
 
-		SDL_SetRenderDrawColor(renderer,0x00,0x00,0x00,SDL_ALPHA_OPAQUE);
-		SDL_RenderClear(renderer);
-		//SDL_SetRenderDrawColor(renderer, 0x00,0x00,0x00, SDL_ALPHA_OPAQUE);
-		//SDL_RenderCopy(renderer, texture, NULL, &texture_rect);
-		SDL_RenderCopy(renderer, texture, NULL, NULL);
-		SDL_RenderPresent(renderer);
-	}
-
+	//	SDL_SetRenderDrawColor(renderer,0x00,0x00,0x00,SDL_ALPHA_OPAQUE);
+	//	SDL_RenderClear(renderer);
+	//	//SDL_SetRenderDrawColor(renderer, 0x00,0x00,0x00, SDL_ALPHA_OPAQUE);
+	//	//SDL_RenderCopy(renderer, texture, NULL, &texture_rect);
+	//	//SDL_RenderCopy(renderer, texture, NULL, NULL);
+	//	SDL_RenderCopyEx(renderer, texture, NULL, NULL, 0.0, NULL,flip);
+	//	SDL_RenderPresent(renderer);
+	//}
 
     //SDL_Delay(3000);  // Pause execution for 3000 milliseconds, for example
 

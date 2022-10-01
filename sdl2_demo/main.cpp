@@ -65,7 +65,7 @@ int main(int argc, char* argv[]) {
     for (int i=0; i<(win_width*win_height); i++){
         pixels[i] = 0x00;
     }
-    for (int i=win_width*win_height/2;i<win_width*win_height/2+win_width*2;i++){
+    for (int i=win_width*10;i<win_width*10+win_width*2;i++){
         pixels[i] =0xFF000000;
     }
     SDL_UpdateTexture(texture, NULL, pixels, pitch);

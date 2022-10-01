@@ -1,4 +1,5 @@
 SYSCONF_LINK = g++
+CFLAGS		 =
 CPPFLAGS     =
 LDFLAGS      =
 LIBS         = -lSDL2 -lSDL2_image
