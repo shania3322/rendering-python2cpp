@@ -48,8 +48,6 @@ int main(int argc, char* argv[]) {
 	SDL_RendererFlip flip = static_cast<SDL_RendererFlip>(SDL_FLIP_NONE);
 	Texture tt(win_width, win_height);
 
-
-
     SDL_Init(SDL_INIT_VIDEO);              // Initialize SDL2
 
     // Create an application window with the following settings:
